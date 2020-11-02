@@ -21,11 +21,9 @@ namespace Planetarity.UI
 
         public void SetZoom(float cameraZoom)
         {
-            var scale = cameraZoom + .2f;
             var rect = GetComponent<RectTransform>();
-            // rect.localScale = new Vector3(scale, scale, scale);
             var planetRect = Utilities.GetScreenRect(damageable.gameObject);
-            var side = planetRect.width * 4;
+            var side = planetRect.width * 5;
             rect.sizeDelta = new Vector2(side, side);
         }
 

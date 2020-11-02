@@ -11,17 +11,11 @@ namespace Planetarity
     {
         public event Action<float> OnCameraZoomChanged = delegate { };
 
-        [SerializeField]
-        private float cameraDistanceMax = 300f;
-        [SerializeField]
-        private float cameraDistanceMin = 10f;
-        [SerializeField]
-        private float scrollSpeed = 5f;
-        [SerializeField]
-        private float moveSpeed = 1f;
-        [SerializeField]
-
-        private Transform target;
+        [SerializeField] private float cameraDistanceMax = 300f;
+        [SerializeField] private float cameraDistanceMin = 10f;
+        [SerializeField] private float scrollSpeed = 5f;
+        [SerializeField] private float moveSpeed = 1f;
+        [SerializeField] private Transform target;
         private float cameraDistance;
         private bool isMovingToTarget = false;
         private float distanceToTarget = 0f;

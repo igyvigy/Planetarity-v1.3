@@ -6,15 +6,17 @@ namespace Planetarity
     public class PlayerPlanet : MonoBehaviour
     {
         private ArtileryCommander artileryCommander;
-        
+        private ShieldCommander shieldCommander;
         private void Start()
         {
             artileryCommander = GetComponent<ArtileryCommander>();
-            artileryCommander.SetWeapon("Wasp");
+            shieldCommander = GetComponent<ShieldCommander>();
         }
 
         private void Update()
         {
+            if (GameManager.i.isPaused) return;
+            
             if (Input.GetAxis("Horizontal") > 0)
             {
                 artileryCommander.MoveArtileryClockwise();
@@ -22,6 +24,14 @@ namespace Planetarity
             if (Input.GetAxis("Horizontal") < 0)
             {
                 artileryCommander.MoveArtileryCounterClockwise();
+            }
+            if (Input.GetAxis("Vertical") > 0)
+            {
+                shieldCommander.MoveShieldClockwise();
+            }
+            if (Input.GetAxis("Vertical") < 0)
+            {
+                shieldCommander.MoveShieldCounterClockwise();
             }
             if (Input.GetKeyDown(KeyCode.Space))
             {

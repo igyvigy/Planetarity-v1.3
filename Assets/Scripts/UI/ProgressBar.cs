@@ -7,7 +7,6 @@ namespace Planetarity.UI
     public class ProgressBar : MonoBehaviour
     {
         [SerializeField] private Image foregroundImage;
-        [SerializeField] private float updateSpeedSeconds = 0.5f;
         [SerializeField] private float positionOffset = 0f;
 
         private ArtileryCommander commander;
@@ -21,11 +20,12 @@ namespace Planetarity.UI
 
         public void SetZoom(float cameraZoom)
         {
-            var scale = cameraZoom + .2f;
+            var scale = cameraZoom + 0.2f;
             var rect = GetComponent<RectTransform>();
-            rect.localScale = new Vector3(scale, scale, scale);
+            // rect.localScale = new Vector3(1, scale, 1);
             var planetRect = Utilities.GetScreenRect(commander.gameObject);
-            rect.sizeDelta = new Vector2(planetRect.width * 1.4f, rect.sizeDelta.y);
+            var rectSide = planetRect.width * 2.6f;
+            rect.sizeDelta = new Vector2(rectSide, rectSide);
         }
 
         private void HandleProgressPercentChanged(float progress)

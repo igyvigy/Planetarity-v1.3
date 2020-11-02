@@ -8,11 +8,6 @@ public class Constants
     #endregion
 
 
-    #region Tags
-    public const string k_TagSettings = "settings";
-    #endregion
-
-
     #region Floats
     public const float k_SunSize = 7f;
     public const float k_SunLightRange = 140f;
@@ -27,6 +22,8 @@ public class Constants
     public const float k_MaxPlanetDensity = 1500f;
     public const float k_InterPlanetDistance = 14f;
     public const float k_ArtileryMoveSpeed = 60f;
+    public const float k_ShieldMoveSpeed = 100f;
+    public const float k_ShieldHealth = 200000f;
 
     #endregion
 
@@ -35,4 +32,5 @@ public class Constants
     public static Color k_WhiteColor = Utilities.ColorFromHex("#ffffff");
     public static Color k_SunColor = Utilities.ColorFromHex("#f5a511");
     #endregion
+
 }

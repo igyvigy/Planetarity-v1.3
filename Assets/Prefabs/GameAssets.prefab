@@ -43,7 +43,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 408e12ecfde8444a4af49ae8da8d2d7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pointerSprite: {fileID: 21300000, guid: a17024a971a1b4aa58f30cbde456fe59, type: 3}
   pfArtilery: {fileID: 4116354944601009906, guid: 21d59f26b20c342baa342dd8be3b3783,
+    type: 3}
+  pfShield: {fileID: 3171065379639148910, guid: 7a824d9a9d21242898aa018847d0faa6,
     type: 3}
   pfRocket: {fileID: 2363593337237391737, guid: 1cff6b8d60fe64c37b77d2bd3a9c1eeb,
     type: 3}

@@ -19,10 +19,13 @@ namespace Planetarity
             }
         }
 
+        public Sprite pointerSprite;
         public Transform pfArtilery;
+        public Transform pfShield;
         public Transform pfRocket;
         public GameObject pfExplosion;
         public ProgressBar pfProgressBar;
         public HealthBar pfHealthBar;
+        
     }
 }

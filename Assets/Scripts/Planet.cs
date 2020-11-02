@@ -28,16 +28,23 @@ namespace Planetarity
             transform.RotateAround(Vector3.zero, Vector3.forward, orbitSpeed * Time.deltaTime);
         }
 
-        public void Configure(string name, Color color, float size)
+        public void Configure(string name, Color color, float size, float density, float orbitSpeed, float? mass = null)
         {
             planetName = name;
             this.color = color;
             this.size = size;
-            density = Constants.k_MaxPlanetDensity;
-            // calculate planet's mass by size and density
-            float volume = (4 / 3) * Mathf.PI * (Mathf.Pow((size / 2), 3));
-            mass = density * volume;
-            orbitSpeed = Random.Range(Constants.k_MinPlanetOrbitSpeed, Constants.k_MaxPlanetOrbitSpeed);
+            this.density = density;
+            this.orbitSpeed = orbitSpeed;
+            if (mass != null)
+            {
+                this.mass = mass.Value;
+            }
+            else
+            {
+                // calculate planet's mass by size and density
+                float volume = (4 / 3) * Mathf.PI * (Mathf.Pow((size / 2), 3));
+                this.mass = density * volume;
+            }
         }
 
         public float GetGravity(Vector3 pos, float mass)

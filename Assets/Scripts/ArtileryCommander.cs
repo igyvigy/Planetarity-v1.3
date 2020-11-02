@@ -14,16 +14,20 @@ namespace Planetarity
         public event Action<ArtileryCommander> OnProgressAdded = delegate { };
         public event Action<ArtileryCommander> OnProgressRemoved = delegate { };
         public event Action<float> OnProgressPercentChaged = delegate { };
-        public float currentProgress { get; private set; }
-        public bool isHoldingFire { get; private set; } = false;
+
+
+        [HideInInspector] public float currentProgress { get; private set; }
+        [HideInInspector] public float currentProgressPercent { get; private set; }
+        [HideInInspector] public bool isHoldingFire { get; private set; } = false;
+        [HideInInspector] public bool isOnCooldown { get; private set; } = false;
+        [HideInInspector] public Vector3 aimDirection { get; private set; } = Vector3.up;
+        [HideInInspector] public string rocketName;
 
         private Planet planet;
         private Artilery artilery;
-        private string rocketName;
         private RocketSO rocketType;
         private float currentMinProgress;
         private float currentMaxProgress;
-        private bool isOnCooldown = false;
         private void Start()
         {
             planet = GetComponent<Planet>();
@@ -67,18 +71,20 @@ namespace Planetarity
         {
             currentProgress = value;
             currentProgress = Mathf.Clamp(currentProgress, currentMinProgress, currentMaxProgress);
-            float progressPercent = currentProgress / currentMaxProgress;
-            OnProgressPercentChaged(progressPercent);
+            currentProgressPercent = currentProgress / currentMaxProgress;
+            OnProgressPercentChaged(currentProgressPercent);
         }
 
         public void MoveArtileryClockwise()
         {
             artilery.transform.RotateAround(transform.position, Vector3.forward, -Constants.k_ArtileryMoveSpeed * Time.deltaTime);
+            aimDirection = artilery.transform.up.normalized;
         }
 
         public void MoveArtileryCounterClockwise()
         {
             artilery.transform.RotateAround(transform.position, Vector3.forward, Constants.k_ArtileryMoveSpeed * Time.deltaTime);
+            aimDirection = artilery.transform.up.normalized;
         }
 
         public void SetWeapon(string name)
@@ -118,7 +124,8 @@ namespace Planetarity
             if (!CanFire()) return;
             var gun = artilery.transform.Find("Gun");
             var firePoint = gun.Find("FirePoint");
-            Rocket.Create(rocketName, firePoint.position, gun.rotation, force);
+            Rocket.Create(rocketName, firePoint.position, gun.rotation, force, gameObject.name, rocketType.size);
+            SoundManager.LaunchRocket(rocketName);
         }
     }
 }

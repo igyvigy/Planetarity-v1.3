@@ -4,14 +4,16 @@ namespace Planetarity
 {
     public class Rocket : MonoBehaviour
     {
-        public static Rocket Create(string name, Vector3 position, Quaternion rotation, float force)
+        public static Rocket Create(string name, Vector3 position, Quaternion rotation, float force, string owner, float size)
         {
             Transform rocketTransform = Instantiate(GameAssets.i.pfRocket, position, rotation);
+            rocketTransform.localScale = new Vector3(size, size, size);
             var rocket = rocketTransform.GetComponent<Rocket>();
-            rocket.Configure(Utilities.GetRocketTypeByName(name), force);
+            rocket.Configure(Utilities.GetRocketTypeByName(name), force, owner);
             return rocket;
         }
         public RocketSO type;
+        public string owner;
         private float disappearTimer;
         private Rigidbody rb;
         private float timeElapsed;
@@ -30,24 +32,26 @@ namespace Planetarity
             }
         }
 
-        private void FixedUpdate() {
-
-            rb.AddForce(transform.up * force, ForceMode.Impulse); //apply launch impulse
-            rb.AddForce(transform.up * type.thrust); // apply thrust
+        private void FixedUpdate()
+        {
+            rb.AddForce(transform.up * force, ForceMode.Impulse);
+            rb.AddForce(transform.up * type.thrust);
             ApplySunGravity();
             ApplyPlanetsGravity();
         }
 
-        public void Configure(RocketSO type, float force)
+        public void Configure(RocketSO type, float force, string owner)
         {
             this.type = type;
             this.force = force;
+            this.owner = owner;
             this.disappearTimer = type.timeToLive;
         }
 
         private void Explode()
         {
-            Explosion.Create(transform.position, 0.2f);
+            Explosion.Create(transform.position, 0.2f * type.size);
+            SoundManager.ExplodeRocket(type.name);
             Destroy(gameObject);
         }
 
@@ -60,16 +64,15 @@ namespace Planetarity
 
         private void ApplyPlanetsGravity()
         {
-            foreach (Planet planet in GameManager.i.planets)
+            foreach (Planet planet in GameManager.i.GetAlivePlanets())
             {
+                if (planet.gameObject.name == owner) continue;
                 Vector3 direction = (transform.position - planet.transform.position).normalized;
                 rb.AddForce(direction * planet.GetGravity(transform.position, type.mass));
             }
-            
         }
 
         private void OnCollisionEnter(Collision other) {
-
             if (other.gameObject.GetComponent<Sun>() != null)
             {
                 Destroy(gameObject);
@@ -77,8 +80,19 @@ namespace Planetarity
             else if (other.gameObject.GetComponent<Damageable>() != null)
             {
                 var damageable = other.gameObject.GetComponent<Damageable>();
+                string playerName = GameManager.i.playerName;
+                if (owner == playerName && other.gameObject.name != playerName) GameManager.i.IncreasePlayerScore(type.damage, other.transform);
                 damageable.ReceiveDamage(type.damage);
+                if (owner == playerName && other.gameObject.name != playerName && damageable.isDead) GameManager.i.IncreasePlayerKills();
                 Explode();
+            }
+            else if (other.gameObject.GetComponent<Shield>() != null)
+            {
+                Explode();
+            }
+            else
+            {
+                Debug.LogFormat("rocket did hit {0}", other.gameObject.name);
             }
         }
     }

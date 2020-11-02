@@ -8,8 +8,24 @@ namespace Planetarity.UI
     {
         private Dictionary<ArtileryCommander, ProgressBar> progressBars = new Dictionary<ArtileryCommander, ProgressBar>();
 
-        private void Start() {
+        private void Start()
+        {
             Camera.main.GetComponent<CameraController>().OnCameraZoomChanged += HandleCameraZoomChanged;
+        }
+        private void LateUpdate()
+        {
+            var commandersToRemove = new List<ArtileryCommander>();
+            foreach (var commander in progressBars.Keys) // cleanup dead progress bars
+            {
+                if (!commander.gameObject.activeInHierarchy)
+                {
+                    commandersToRemove.Add(commander);
+                }
+            }
+            foreach (var c in commandersToRemove)
+            {
+                RemoveProgressBar(c);
+            }
         }
 
         public void SubscribeOnArtileryCommander(ArtileryCommander commander)

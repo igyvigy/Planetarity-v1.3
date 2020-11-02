@@ -15,9 +15,10 @@ MonoBehaviour:
   name: Wasp
   thrust: 10
   mass: 10
-  cooldown: 2
-  damage: 10000
+  size: 1
+  cooldown: 5
+  damage: 5000
   timeToLive: 20
   minForce: 0.1
-  maxForce: 8
-  forceGain: 2
+  maxForce: 5
+  forceGain: 1

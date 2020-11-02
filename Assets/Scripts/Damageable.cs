@@ -13,7 +13,7 @@ namespace Planetarity
         public event Action<Damageable> OnHealthRemoved = delegate { };
         public event Action<float> OnHealthPercentChaged = delegate { };
 
-        public float health;
+        public float health = 0;
         public bool isDead = false;
         private float maxHealth;
         private Planet planet;
@@ -21,9 +21,14 @@ namespace Planetarity
         private void Start()
         {
             planet = GetComponent<Planet>();
-            maxHealth = planet.size * planet.mass;
-            health = maxHealth;
-            ShowHealthBar();
+            if (health > 0)
+            {
+                ShowHealthBar();
+                if (health != maxHealth)
+                {
+                    OnHealthPercentChaged(health / maxHealth);
+                }
+            }
         }
         private void Update()
         {
@@ -31,6 +36,13 @@ namespace Planetarity
             {
                 Explode();
             }
+        }
+
+        public void SetHealth(float maxHealth, float health)
+        {
+            this.maxHealth = maxHealth;
+            this.health = health;
+            ShowHealthBar();
         }
 
         public void ReceiveDamage(float damage)
@@ -58,7 +70,8 @@ namespace Planetarity
         private void Explode()
         {
             Explosion.Create(transform.position, planet.size);
-            Destroy(gameObject);
+            SoundManager.ExplodePlanet();
+            gameObject.SetActive(false);
         }
     }
 }

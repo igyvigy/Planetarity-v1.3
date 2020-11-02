@@ -8,6 +8,7 @@ public class RocketSO : ScriptableObject
     public new string name;
     public float thrust;
     public float mass;
+    public float size;
     public float cooldown;
     public float damage;
     public float timeToLive;
